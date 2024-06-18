@@ -115,9 +115,6 @@ if (app.Environment.IsDevelopment())
     app.UseCors("DevCors");
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
 app.UseCors("ProdCors");
 
 app.UseHttpsRedirection();
