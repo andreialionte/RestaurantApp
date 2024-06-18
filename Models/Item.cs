@@ -17,6 +17,9 @@ namespace RestaurantApp.Models
                 public IFormFile? PhotoFile { get; set; }*/
         [MaxLength]
         public string? PhotoUrl { get; set; }
+        public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
+        public Category? Category { get; set; }
 
         public ICollection<Order>? Orders { get; set; }
     }

@@ -11,6 +11,7 @@ namespace RestaurantApp.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Auth> Auths { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public DataContextEf(DbContextOptions<DataContextEf> options, IConfiguration config)
             : base(options)
@@ -32,7 +33,7 @@ namespace RestaurantApp.Data
             modelBuilder.Entity<Order>().ToTable("Orders", "RestaurantAppSchema").HasKey(k => k.OrderId);
             modelBuilder.Entity<Order>().HasOne(p => p.Payment).WithOne(o => o.Order).HasForeignKey<Order>(o => o.PaymentId); // Explicitly specify the foreign key property
             modelBuilder.Entity<Order>().HasOne(u => u.User).WithMany(o => o.Orders).HasForeignKey(o => o.CustomerId);
-            modelBuilder.Entity<Order>().HasMany(i => i.Items).WithMany(o => o.Orders);
+
 
             modelBuilder.Entity<Payment>().ToTable("Payments", "RestaurantAppSchema").HasKey(k => k.PaymentId);
             modelBuilder.Entity<Payment>().HasOne(o => o.Order).WithOne(p => p.Payment).HasForeignKey<Payment>(p => p.OrderId);
@@ -40,7 +41,11 @@ namespace RestaurantApp.Data
 
             modelBuilder.Entity<Item>().ToTable("Items", "RestaurantAppSchema").HasKey(k => k.ItemId);
             modelBuilder.Entity<Item>().HasMany(o => o.Orders).WithMany(i => i.Items);
+            modelBuilder.Entity<Item>().HasOne(m => m.Category).WithMany(i => i.Items);
             /*            modelBuilder.Entity<Item>().Property(p => p.Price).HasColumnType("decimal(19, 4)");*/
+
+            modelBuilder.Entity<Category>().ToTable("Categories", "RestaurantAppSchema").HasKey(k => k.CategoryId);
+            modelBuilder.Entity<Category>().HasMany(m => m.Items).WithOne(m => m.Category);
 
             modelBuilder.Entity<User>().ToTable("Users", "RestaurantAppSchema").HasKey(k => k.UserId);
 

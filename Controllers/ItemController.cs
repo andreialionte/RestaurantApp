@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RestaurantApp.Data;
 using RestaurantApp.DTOs;
 using RestaurantApp.Models;
@@ -29,6 +30,13 @@ namespace RestaurantApp.Controllers
             return Ok(itemsDb);
         }
 
+        [HttpGet("GetItemsByCategory")]
+        public async Task<IActionResult> GetItemsByCategory(int categoryId)
+        {
+            var itemsDb = await _ef.Items.Where(i => i.CategoryId == categoryId).ToListAsync();
+            return Ok(itemsDb);
+        }
+
         [HttpGet("GetSingleItems")]
         public IActionResult GetSingleItems(int itemId)
         {
@@ -41,7 +49,7 @@ namespace RestaurantApp.Controllers
         }
 
         [HttpPost("AddItems")]
-        public async Task<IActionResult> AddItems([FromForm] ItemDto itemDto, IFormFile file)
+        public async Task<IActionResult> AddItems([FromForm] ItemDto itemDto, IFormFile file, int categoryId)
         {
             string photoUrl = await _uploadService.Upload(file);
 
@@ -57,8 +65,14 @@ namespace RestaurantApp.Controllers
                 ItemName = itemDto.ItemName,
                 Description = itemDto.Description,
                 Price = itemDto.Price,
-                PhotoUrl = photoUrl
+                PhotoUrl = photoUrl,
+                CategoryId = categoryId
             };
+            var categoryExists = _ef.Categories.FirstOrDefault(c => c.CategoryId == categoryId);
+            if (categoryExists == null)
+            {
+                throw new Exception($"The category with id {categoryId} does not exist");
+            }
 
             _itemRepository.Add(newItem);
             _itemRepository.Save();
@@ -73,6 +87,7 @@ namespace RestaurantApp.Controllers
             itemDb.ItemName = itemDto.ItemName;
             itemDb.Price = itemDto.Price;
             itemDb.Description = itemDto.Description;
+            /*            itemDb.Categories = itemDto.Categories;*/
 
             if (itemDb != null)
             {

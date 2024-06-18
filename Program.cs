@@ -49,13 +49,15 @@ builder.Services.AddCors(ops =>
     {
         opts.AllowAnyHeader();
         opts.AllowAnyMethod();
+        opts.AllowCredentials();
         opts.WithOrigins("http://localhost:4200");
     });
     ops.AddPolicy("ProdCors", opts =>
     {
         opts.AllowAnyMethod();
         opts.AllowAnyHeader();
-        opts.WithOrigins("http://www.website.com/");
+        opts.AllowCredentials();
+        opts.WithOrigins("https://restaurant-app-frontend-three.vercel.app/");
     });
 });
 

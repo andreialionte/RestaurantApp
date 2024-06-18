@@ -35,6 +35,10 @@ namespace RestaurantApp.Controllers
             /*            User? userDb = _ef.Users.Where(u => u.Email == registerDto.Email).FirstOrDefault();*/
 
             byte[] passwordSalt = new byte[128 / 8];
+            if (registerDto == null || registerDto.Password == null)
+            {
+                return BadRequest("Invalid registration data.");
+            }
 
 
             using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
