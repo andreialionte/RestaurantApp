@@ -57,7 +57,7 @@ builder.Services.AddCors(ops =>
         opts.AllowAnyMethod();
         opts.AllowAnyHeader();
         opts.AllowCredentials();
-        opts.WithOrigins("https://restaurant-app-frontend-three.vercel.app/");
+        opts.WithOrigins("https://restaurant-app-frontend-three.vercel.app");
     });
 });
 
